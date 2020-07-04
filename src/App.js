@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PhotoContextProvider from "./context/PhotoContext";
+import CategoryContextProvider from "./context/CategoryProvider";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import Header from "./components/Header";
 import Item from "./components/Item";
@@ -17,42 +18,34 @@ class App extends Component {
 
   render() {
     return (
-      <PhotoContextProvider>
-        <HashRouter basename="/SnapScout">
-          <div className="container">
-            <Route
-              render={props => (
-                <Header
-                  handleSubmit={this.handleSubmit}
-                  history={props.history}
-                />
-              )}
-            />
-            <Switch>
+      <CategoryProvider>
+        <PhotoContextProvider>
+          <HashRouter basename="/SnapScout">
+            <div className="container">
               <Route
-                exact
-                path="/"
-                render={() => <Redirect to="/mountain" />}
-              />
-
-              <Route
-                path="/mountain"
-                render={() => <Item searchTerm="mountain" />}
-              />
-              <Route path="/beach" render={() => <Item searchTerm="beach" />} />
-              <Route path="/bird" render={() => <Item searchTerm="bird" />} />
-              <Route path="/food" render={() => <Item searchTerm="food" />} />
-              <Route
-                path="/search/:searchInput"
                 render={props => (
-                  <Search searchTerm={props.match.params.searchInput} />
+                  <Header
+                    handleSubmit={this.handleSubmit}
+                    history={props.history}
+                  />
                 )}
               />
-              <Route component={NotFound} />
-            </Switch>
-          </div>
-        </HashRouter>
-      </PhotoContextProvider>
+              <Switch>
+                <Route exact path="/">
+                  () => <Redirect to="/mountain" />
+                </Route>
+                <Route path="/search/:searchInput">
+                  ({ match }) => <Search searchTerm={match.params.searchInput} />
+                </Route>
+                <Route path="/:category">
+                  ({ match }) => <Item searchTerm={match.params.category} />
+                </Route>
+                <Route component={NotFound} />
+              </Switch>
+            </div>
+          </HashRouter>
+        </PhotoContextProvider>
+      </CategoryProvider>
     );
   }
 }

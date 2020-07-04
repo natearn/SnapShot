@@ -21,3 +21,5 @@ export const CategoryProvider = props => {
     </CategoryContext.Provider>
   );
 };
+
+export default CategoryProvider;
