@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PhotoContextProvider from "./context/PhotoContext";
-import CategoryContextProvider from "./context/CategoryProvider";
+import CategoryContextProvider from "./context/CategoryContext";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import Header from "./components/Header";
 import Item from "./components/Item";
@@ -18,7 +18,7 @@ class App extends Component {
 
   render() {
     return (
-      <CategoryProvider>
+      <CategoryContextProvider>
         <PhotoContextProvider>
           <HashRouter basename="/SnapScout">
             <div className="container">
@@ -32,20 +32,22 @@ class App extends Component {
               />
               <Switch>
                 <Route exact path="/">
-                  () => <Redirect to="/mountain" />
+                  <Redirect to="/mountain" />
                 </Route>
-                <Route path="/search/:searchInput">
-                  ({ match }) => <Search searchTerm={match.params.searchInput} />
-                </Route>
-                <Route path="/:category">
-                  ({ match }) => <Item searchTerm={match.params.category} />
-                </Route>
+                <Route
+                  path="/search/:searchInput"
+                  render={({ match }) => <Search searchTerm={match.params.searchInput} />}
+                />
+                <Route
+                  path="/:category"
+                  render={({ match }) => <Item searchTerm={match.params.category} />}
+                />
                 <Route component={NotFound} />
               </Switch>
             </div>
           </HashRouter>
         </PhotoContextProvider>
-      </CategoryProvider>
+      </CategoryContextProvider>
     );
   }
 }
