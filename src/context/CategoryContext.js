@@ -11,7 +11,7 @@ export const CategoryProvider = props => {
   useEffect(() => {
     axios
       .get(`${API_URL}/categories`)
-      .then(res => setCategories(res.data.categoreies))
+      .then(res => setCategories(res.data.categories))
       .catch(err => console.error("Error: GET /categories", err))
       .finally(() => setLoading(false))
   },[]);
