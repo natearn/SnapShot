@@ -8,10 +8,22 @@ export const CategoryContext = createContext();
 export const CategoryProvider = props => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // TODO: use a schema validator library
+  const parseCategories = res => {
+    const { categories } = res.data;
+    if (categories instanceof Array) {
+      return categories;
+    } else {
+      throw Error("Response categories is not an Array");
+    }
+  };
+
   useEffect(() => {
     axios
       .get(`${API_URL}/categories`)
-      .then(res => setCategories(res.data.categories))
+      .then(parseCategories)
+      .then(setCategories)
       .catch(err => console.error("Error: GET /categories", err))
       .finally(() => setLoading(false))
   },[]);
